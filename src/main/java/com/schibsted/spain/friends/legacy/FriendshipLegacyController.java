@@ -45,4 +45,7 @@ public class FriendshipLegacyController {
   ) {
     throw new RuntimeException("not implemented yet!");
   }
+
 }
+
+
