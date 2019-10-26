@@ -22,7 +22,7 @@ public class SignupLegacyController {
           @RequestParam("username") String username,
           @RequestHeader("X-Password") String password
   ) throws Exception {
-      signupService.validate(username, password);
+      signupService.validateUserName(username, password);
 
 
   }

@@ -17,40 +17,30 @@ import java.util.Map;
 @Service
 public class SignupService {
 
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @Autowired
     private UserRepository userRepository;
 
-    /*
-    @Autowired
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-*/
-    public  void validate(String username, String password)  throws Exception {
-        System.out.println(">>>>>> LALALALL: "+ username + ">> "+password);
+    public  void validateUserName(String username, String password)  throws Exception {
+        System.out.println("[method:validateUserName][userName: "+ username + " ] [password: "+password + " ]");
 
-        Map<String, String> sampleUsers = new HashMap();
-        sampleUsers.put("johndoe", "j12345678");
-        sampleUsers.put("roseanne", "r3456789");
-        sampleUsers.put("peter", "p4567890");
-        sampleUsers.put("jessica", "j5678901");
-        sampleUsers.put("robert", "r0123456");
-        userRepository.findAll();
-        User uno = userRepository.getOne(1L);
         List<User> users = userRepository.findByUserName(username);
-        //Optional<User> dos = userRepository.findByName(username);
-        //System.out.println("1>>>>>> "+dos.get().getUserName());
 
+        // Valida que el usuario sea unico
+        if(!(users.isEmpty() || users.size() == 0))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exist jet");
+        if (!username.matches("[a-zA-Z0-9]+") || !password.matches("[a-zA-Z0-9]+"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username and password must be alphanumeric");
+        // Valida condiciones del nombre del usuario
+        if (!(username.length() >= 5  && username.length() < 10))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username must be into 5 to 10 characters");
+        // Valida condiciones del nombre del usuario
+        if (!(password.length() >= 8  && password.length() < 12))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be into 8 to 10 characters ");
 
-        if(sampleUsers.get(username) == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not exist");
-
-        if(!password.equals(sampleUsers.get(username)))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "incorrect pass");
+        //TODO hashar password
+        User newUser = new User(username, password);
+        userRepository.save(newUser);
 
     }
+
 }

@@ -1,3 +1,5 @@
 .gradle/
 .idea/
-*/gradle-wrapper.properties
+*/gradle-wrapper.propertie
+/build/*
+build/*
