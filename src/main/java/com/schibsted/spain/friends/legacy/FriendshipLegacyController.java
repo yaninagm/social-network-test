@@ -17,6 +17,7 @@ public class FriendshipLegacyController {
       @RequestParam("usernameTo") String usernameTo,
       @RequestHeader("X-Password") String password
   ) {
+
     throw new RuntimeException("not implemented yet!");
   }
 
