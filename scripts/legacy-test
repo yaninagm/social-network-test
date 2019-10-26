@@ -62,7 +62,7 @@ response_status_code_should_be 4..
 given_request "POST -H X-Password:j12345678 $service/signup?username=johndoe"
 response_status_code_should_be 2..
 given_request "POST -H X-Password:j12345678 $service/signup?username=johndoe"
-response_status_code_should_be 2..
+response_status_code_should_be 4..
 
 given_request "POST -H X-Password:r3456789 $service/signup?username=roseanne"
 response_status_code_should_be 2..
