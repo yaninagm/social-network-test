@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,7 +70,6 @@ public class FriendshipLegacyController {
 
     System.out.println("FOR: from: "+usernameFrom + " to: "+ usernameTo + " relation: "+relations );
     if (relations.size() > 0) {
-      System.out.println(">>>>>>> relations: "+relations.get(0));
       for (RelationShip relationShip: relations){
         if(Objects.equals(relationShip.getStatus(), "accepted")){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are already friends");
@@ -79,7 +79,6 @@ public class FriendshipLegacyController {
         return;
       }
     }
-    System.out.println(">>>> NO EXISTE RELACION ");
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
   }
 
@@ -89,7 +88,7 @@ public class FriendshipLegacyController {
       @RequestParam("usernameTo") String usernameTo,
       @RequestHeader("X-Password") String password
   ) {
-    System.out.println(">>>>> INICIO [method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
+    System.out.println("[method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
 
     loginService.signIn(usernameFrom, password);
 
@@ -97,7 +96,6 @@ public class FriendshipLegacyController {
 
     System.out.println("FOR: from: "+usernameFrom + " to: "+ usernameTo + " relation: "+relations );
     if (relations.size() > 0) {
-      System.out.println(">>>>>>> relations: "+relations.get(0));
       for (RelationShip relationShip: relations){
         if(Objects.equals(relationShip.getStatus(), "accepted") || Objects.equals(relationShip.getStatus(), "declined")){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't declined request");
@@ -108,7 +106,6 @@ public class FriendshipLegacyController {
       }
     }
 
-    System.out.println(">>>> NO EXISTE RELACION ");
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
   }
 
@@ -117,7 +114,30 @@ public class FriendshipLegacyController {
       @RequestParam("username") String username,
       @RequestHeader("X-Password") String password
   ) {
-    List<RelationShip> friends = friendShipRepository.findByUserFrom(username);
+    System.out.println("[method:listFriends] [username: "+username+"]");
+    loginService.signIn(username, password);
+    List<RelationShip> relationships = friendShipRepository.findByUserFromAccepted(username);
+
+    ArrayList <String> friends = new ArrayList<>();
+
+
+    if (relationships.size() <= 0){
+      List<RelationShip> relationshipsNotDeclined = friendShipRepository.findByUserFromNotDeclined(username);
+      if (relationshipsNotDeclined.size() == 0) {
+        return friends;
+      }
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't friends");
+    }
+
+
+    for (RelationShip relationship : relationships) {
+      if (Objects.equals(relationship.getUserTo(), username)) {
+        friends.add(relationship.getUserFrom());
+      }else {
+        friends.add(relationship.getUserTo());
+      }
+    }
+
     return friends;
   }
 
