@@ -17,18 +17,10 @@ public class LoginService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    ValidationsService validation;
+
 
     public  void signUp(String username, String password){
         System.out.println("[method:signUp][userName: "+ username + " ] [password: "+password + " ]");
-
-        List<User> users = userRepository.findByUserName(username);
-        if(!(users.isEmpty() || users.size() == 0))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exist yet");
-
-        validation.validateUserName(username);
-        validation.validatePassword(password);
 
         //TODO hashar password
         User newUser = new User(username, password);

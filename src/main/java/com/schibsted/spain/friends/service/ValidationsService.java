@@ -35,4 +35,10 @@ public class ValidationsService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be into 8 to 10 characters ");
     }
 
+    public void validateIfUserExist(String username){
+        List<User> users = userRepository.findByUserName(username);
+        if(!(users.isEmpty() || users.size() == 0))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exist yet");
+    }
+
 }
