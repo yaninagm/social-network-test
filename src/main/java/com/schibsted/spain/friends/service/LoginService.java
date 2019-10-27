@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Validation;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class LoginService {
@@ -19,12 +20,12 @@ public class LoginService {
     @Autowired
     ValidationsService validation;
 
-    public  void sigUp(String username, String password){
-        System.out.println("[method:sigUp][userName: "+ username + " ] [password: "+password + " ]");
+    public  void signUp(String username, String password){
+        System.out.println("[method:signUp][userName: "+ username + " ] [password: "+password + " ]");
 
         List<User> users = userRepository.findByUserName(username);
         if(!(users.isEmpty() || users.size() == 0))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exist jet");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exist yet");
 
         validation.validateUserName(username);
         validation.validatePassword(password);
@@ -34,18 +35,17 @@ public class LoginService {
         userRepository.save(newUser);
     }
 
-    public  void sigIn(String username, String password){
-        System.out.println("[method:sigIn][userName: "+ username + " ] [password: "+password + " ]");
+    public  void signIn(String username, String password){
+        System.out.println("[method:signIn][userName: "+ username + " ] [password: "+password + " ]");
 
         List<User> users = userRepository.findByUserName(username);
-        if(!(users.isEmpty() || users.size() == 0))
+        if(users.isEmpty() || users.size() == 0)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User dont exist");
 
         for (User user : users){
-            if(user.getPassword() != password)
+            if(!Objects.equals(user.getPassword(), password))
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect Password");
         }
-
     }
 
 

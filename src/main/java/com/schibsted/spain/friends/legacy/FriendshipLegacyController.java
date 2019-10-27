@@ -1,8 +1,7 @@
 package com.schibsted.spain.friends.legacy;
 
 import com.schibsted.spain.friends.model.RelationShip;
-import com.schibsted.spain.friends.model.User;
-import com.schibsted.spain.friends.repository.RelationShipRepository;
+import com.schibsted.spain.friends.repository.FriendShipRepository;
 import com.schibsted.spain.friends.repository.UserRepository;
 import com.schibsted.spain.friends.service.FriendShipService;
 import com.schibsted.spain.friends.service.LoginService;
@@ -27,7 +26,7 @@ public class FriendshipLegacyController {
   @Autowired
   UserRepository userRepository;
   @Autowired
-  RelationShipRepository relationShipRepository;
+  FriendShipRepository friendShipRepository;
   @Autowired
   ValidationsService validationsService;
   @Autowired
@@ -39,20 +38,25 @@ public class FriendshipLegacyController {
       @RequestParam("usernameTo") String usernameTo,
       @RequestHeader("X-Password") String password
   ) {
-    List<User> users = userRepository.findByUserName(usernameFrom);
-    if(!(users.isEmpty() || users.size() == 0))
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User dont exist jet");
+    System.out.println("[method:requestFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
 
-    loginService.sigIn(usernameFrom, password);
+    loginService.signIn(usernameFrom, password);
+
 
     if (validationsService.validateIsUserRegistered(usernameTo) == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User dont exist");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User to invited dont exist");
 
 
-    //RelationShip relationShip = new RelationShip(usernameFrom, usernameTo, "pending");
-    //relationShipRepository.save(relationShip);
+    List<RelationShip> relation = friendShipRepository.findByUserFromAndUserTo(usernameFrom, usernameTo);
 
-    throw new RuntimeException("not implemented yet!");
+    if(!relation.isEmpty())
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "request pending");
+
+    RelationShip relationShip = new RelationShip(usernameFrom, usernameTo, "pending");
+    System.out.println(">>>>>>>"+ relationShip);
+
+    friendShipRepository.save(relationShip);
+
   }
 
   @PostMapping("/accept")

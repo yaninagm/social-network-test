@@ -17,7 +17,7 @@ public class ValidationsService {
 
     public User validateIsUserRegistered(String username){
         List<User> users = userRepository.findByUserName(username);
-        if(!(users.isEmpty() || users.size() == 0))
+        if(users.isEmpty() || users.size() == 0)
             return null;
         return users.get(0);
     }

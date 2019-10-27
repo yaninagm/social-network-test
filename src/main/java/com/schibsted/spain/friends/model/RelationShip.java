@@ -10,26 +10,26 @@ public class RelationShip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String friendFrom;
-    private String friendTo;
+    private String userFrom;
+    private String userTo;
     private String status;
 
-    @Column(name = "friend_from", nullable = true)
-    public String getFriendFrom() {
-        return friendFrom;
+    @Column(name = "user_from", nullable = true)
+    public String getUserFrom() {
+        return userFrom;
     }
 
-    public void setFriendFrom(String friendFrom) {
-        this.friendFrom = friendFrom;
+    public void setUserFrom(String userFrom) {
+        this.userFrom = userFrom;
     }
 
-    @Column(name = "friend_to", nullable = true)
-    public String getFriendTo() {
-        return friendTo;
+    @Column(name = "user_to", nullable = true)
+    public String getUserTo() {
+        return userTo;
     }
 
-    public void setFriendTo(String friendTo) {
-        this.friendTo = friendTo;
+    public void setUserTo(String userTo) {
+        this.userTo = userTo;
     }
 
     @Column(name = "status", nullable = true)
@@ -41,17 +41,21 @@ public class RelationShip {
         this.status = status;
     }
 
-    public RelationShip(String friendFrom, String friendTo, String status) {
-        this.friendFrom = friendFrom;
-        this.friendTo = friendTo;
+    public RelationShip() {
+    }
+
+    public RelationShip(String userFrom, String userTo, String status) {
+        this.userFrom = userFrom;
+        this.userTo = userTo;
         this.status = status;
     }
 
     @Override
     public String toString() {
         return "RelationShip{" +
-                "friendFrom='" + friendFrom + '\'' +
-                ", friendTo='" + friendTo + '\'' +
+                "id=" + id +
+                ", userFrom='" + userFrom + '\'' +
+                ", userTo='" + userTo + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }
