@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/friendship")
@@ -42,21 +43,16 @@ public class FriendshipLegacyController {
 
     loginService.signIn(usernameFrom, password);
 
-
     if (validationsService.validateIsUserRegistered(usernameTo) == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User to invited dont exist");
 
-
-    List<RelationShip> relation = friendShipRepository.findByUserFromAndUserTo(usernameFrom, usernameTo);
+    List<RelationShip> relation = friendShipRepository.findByUserFromAndUserToInPending(usernameFrom, usernameTo);
 
     if(!relation.isEmpty())
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "request pending");
 
     RelationShip relationShip = new RelationShip(usernameFrom, usernameTo, "pending");
-    System.out.println(">>>>>>>"+ relationShip);
-
     friendShipRepository.save(relationShip);
-
   }
 
   @PostMapping("/accept")
@@ -65,7 +61,26 @@ public class FriendshipLegacyController {
       @RequestParam("usernameTo") String usernameTo,
       @RequestHeader("X-Password") String password
   ) {
-    throw new RuntimeException("not implemented yet!");
+    System.out.println("[method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
+
+    loginService.signIn(usernameFrom, password);
+
+    List<RelationShip> relations = friendShipRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
+
+    System.out.println("FOR: from: "+usernameFrom + " to: "+ usernameTo + " relation: "+relations );
+    if (relations.size() > 0) {
+      System.out.println(">>>>>>> relations: "+relations.get(0));
+      for (RelationShip relationShip: relations){
+        if(Objects.equals(relationShip.getStatus(), "accepted")){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are already friends");
+        }
+        relationShip.setStatus("accepted");
+        friendShipRepository.save(relationShip);
+        return;
+      }
+    }
+    System.out.println(">>>> NO EXISTE RELACION ");
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
   }
 
   @PostMapping("/decline")
@@ -74,7 +89,27 @@ public class FriendshipLegacyController {
       @RequestParam("usernameTo") String usernameTo,
       @RequestHeader("X-Password") String password
   ) {
-    throw new RuntimeException("not implemented yet!");
+    System.out.println(">>>>> INICIO [method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
+
+    loginService.signIn(usernameFrom, password);
+
+    List<RelationShip> relations = friendShipRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
+
+    System.out.println("FOR: from: "+usernameFrom + " to: "+ usernameTo + " relation: "+relations );
+    if (relations.size() > 0) {
+      System.out.println(">>>>>>> relations: "+relations.get(0));
+      for (RelationShip relationShip: relations){
+        if(Objects.equals(relationShip.getStatus(), "accepted") || Objects.equals(relationShip.getStatus(), "declined")){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't declined request");
+        }
+        relationShip.setStatus("declined");
+        friendShipRepository.save(relationShip);
+        return;
+      }
+    }
+
+    System.out.println(">>>> NO EXISTE RELACION ");
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
   }
 
   @GetMapping("/list")
@@ -82,7 +117,8 @@ public class FriendshipLegacyController {
       @RequestParam("username") String username,
       @RequestHeader("X-Password") String password
   ) {
-    throw new RuntimeException("not implemented yet!");
+    List<RelationShip> friends = friendShipRepository.findByUserFrom(username);
+    return friends;
   }
 
 }
