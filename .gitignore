@@ -10,3 +10,4 @@ build/classes/java/main/com/schibsted/spain/friends/legacy/SignupLegacyControlle
 build/classes/java/main/com/schibsted/spain/friends/model/RelationShip.class
 build/classes/java/main/com/schibsted/spain/friends/model/User.class
 build/resources/main/data.sql
+build/classes/java/main/com/schibsted/spain/friends/legacy/FriendshipLegacyController.class
