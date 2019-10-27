@@ -1,6 +1,6 @@
 package com.schibsted.spain.friends.legacy;
 
-import com.schibsted.spain.friends.model.RelationShip;
+import com.schibsted.spain.friends.model.Friendship;
 import com.schibsted.spain.friends.repository.FriendShipRepository;
 import com.schibsted.spain.friends.repository.UserRepository;
 import com.schibsted.spain.friends.service.FriendShipService;
@@ -24,7 +24,7 @@ import java.util.Objects;
 @RequestMapping("/friendship")
 public class FriendshipLegacyController {
   @Autowired
-  FriendShipService friendShipService;
+  FriendShipService friendshipService;
   @Autowired
   UserRepository userRepository;
   @Autowired
@@ -43,17 +43,10 @@ public class FriendshipLegacyController {
     System.out.println("[method:requestFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
 
     loginService.signIn(usernameFrom, password);
+    if(userRepository.findByUserName(usernameTo).isEmpty())
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User to invited doesn't exist");
 
-    if (validationsService.validateIsUserRegistered(usernameTo) == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User to invited dont exist");
-
-    List<RelationShip> relation = friendShipRepository.findByUserFromAndUserToInPending(usernameFrom, usernameTo);
-
-    if(!relation.isEmpty())
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "request pending");
-
-    RelationShip relationShip = new RelationShip(usernameFrom, usernameTo, "pending");
-    friendShipRepository.save(relationShip);
+    friendshipService.requestFriendship(usernameFrom, usernameTo);
   }
 
   @PostMapping("/accept")
@@ -66,16 +59,15 @@ public class FriendshipLegacyController {
 
     loginService.signIn(usernameFrom, password);
 
-    List<RelationShip> relations = friendShipRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
+    List<Friendship> relations = friendShipRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
 
-    System.out.println("FOR: from: "+usernameFrom + " to: "+ usernameTo + " relation: "+relations );
     if (relations.size() > 0) {
-      for (RelationShip relationShip: relations){
-        if(Objects.equals(relationShip.getStatus(), "accepted")){
+      for (Friendship friendship : relations){
+        if(Objects.equals(friendship.getStatus(), "accepted")){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are already friends");
         }
-        relationShip.setStatus("accepted");
-        friendShipRepository.save(relationShip);
+        friendship.setStatus("accepted");
+        friendShipRepository.save(friendship);
         return;
       }
     }
@@ -92,16 +84,15 @@ public class FriendshipLegacyController {
 
     loginService.signIn(usernameFrom, password);
 
-    List<RelationShip> relations = friendShipRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
+    List<Friendship> relations = friendShipRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
 
-    System.out.println("FOR: from: "+usernameFrom + " to: "+ usernameTo + " relation: "+relations );
     if (relations.size() > 0) {
-      for (RelationShip relationShip: relations){
-        if(Objects.equals(relationShip.getStatus(), "accepted") || Objects.equals(relationShip.getStatus(), "declined")){
+      for (Friendship friendship : relations){
+        if(Objects.equals(friendship.getStatus(), "accepted") || Objects.equals(friendship.getStatus(), "declined")){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't declined request");
         }
-        relationShip.setStatus("declined");
-        friendShipRepository.save(relationShip);
+        friendship.setStatus("declined");
+        friendShipRepository.save(friendship);
         return;
       }
     }
@@ -116,13 +107,13 @@ public class FriendshipLegacyController {
   ) {
     System.out.println("[method:listFriends] [username: "+username+"]");
     loginService.signIn(username, password);
-    List<RelationShip> relationships = friendShipRepository.findByUserFromAccepted(username);
+    List<Friendship> relationships = friendShipRepository.findByUserFromAccepted(username);
 
     ArrayList <String> friends = new ArrayList<>();
 
 
     if (relationships.size() <= 0){
-      List<RelationShip> relationshipsNotDeclined = friendShipRepository.findByUserFromNotDeclined(username);
+      List<Friendship> relationshipsNotDeclined = friendShipRepository.findByUserFromNotDeclined(username);
       if (relationshipsNotDeclined.size() == 0) {
         return friends;
       }
@@ -130,7 +121,7 @@ public class FriendshipLegacyController {
     }
 
 
-    for (RelationShip relationship : relationships) {
+    for (Friendship relationship : relationships) {
       if (Objects.equals(relationship.getUserTo(), username)) {
         friends.add(relationship.getUserFrom());
       }else {

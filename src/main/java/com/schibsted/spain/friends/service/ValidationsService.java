@@ -15,12 +15,6 @@ public class ValidationsService {
     @Autowired
     private UserRepository userRepository;
 
-    public User validateIsUserRegistered(String username){
-        List<User> users = userRepository.findByUserName(username);
-        if(users.isEmpty() || users.size() == 0)
-            return null;
-        return users.get(0);
-    }
     public void validateUserName(String username){
         if (!username.matches("[a-zA-Z0-9]+") )
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username and password must be alphanumeric");
@@ -36,9 +30,15 @@ public class ValidationsService {
     }
 
     public void validateIfUserExist(String username){
-        List<User> users = userRepository.findByUserName(username);
-        if(!(users.isEmpty() || users.size() == 0))
+        System.out.println("[method:validateIfUserExist] [username:]"+username);
+        if(!(userRepository.findByUserName(username).isEmpty()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exist yet");
     }
 
+    public User validateIsUserRegistered(String username){
+        List<User> users = userRepository.findByUserName(username);
+        if(users.isEmpty() )
+            return null;
+        return users.get(0);
+    }
 }

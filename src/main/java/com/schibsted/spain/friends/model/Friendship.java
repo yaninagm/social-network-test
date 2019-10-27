@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "relationship")
-public class RelationShip {
+public class Friendship {
 
 
     @Id
@@ -41,10 +41,10 @@ public class RelationShip {
         this.status = status;
     }
 
-    public RelationShip() {
+    public Friendship() {
     }
 
-    public RelationShip(String userFrom, String userTo, String status) {
+    public Friendship(String userFrom, String userTo, String status) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.status = status;
@@ -52,7 +52,7 @@ public class RelationShip {
 
     @Override
     public String toString() {
-        return "RelationShip{" +
+        return "Friendship{" +
                 "id=" + id +
                 ", userFrom='" + userFrom + '\'' +
                 ", userTo='" + userTo + '\'' +

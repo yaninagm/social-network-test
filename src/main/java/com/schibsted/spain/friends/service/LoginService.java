@@ -21,7 +21,6 @@ public class LoginService {
 
     public  void signUp(String username, String password){
         System.out.println("[method:signUp][userName: "+ username + " ] [password: "+password + " ]");
-
         //TODO hashar password
         User newUser = new User(username, password);
         userRepository.save(newUser);
@@ -32,7 +31,7 @@ public class LoginService {
 
         List<User> users = userRepository.findByUserName(username);
         if(users.isEmpty() || users.size() == 0)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User dont exist");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist");
 
         for (User user : users){
             if(!Objects.equals(user.getPassword(), password))
