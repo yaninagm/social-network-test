@@ -13,6 +13,7 @@ import java.util.Map;
 public class FriendShipService {
 
 
+
     private Map getFriends(){
         Map<String, Object> user = new HashMap();
         ArrayList<String> friends = new ArrayList<>();

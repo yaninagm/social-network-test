@@ -1,6 +1,6 @@
 package com.schibsted.spain.friends.legacy;
 
-import com.schibsted.spain.friends.service.SignupService;
+import com.schibsted.spain.friends.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,14 +15,14 @@ public class SignupLegacyController {
 
 
     @Autowired
-    private SignupService signupService;
+    private LoginService loginService;
 
   @PostMapping
   void signUp(
           @RequestParam("username") String username,
           @RequestHeader("X-Password") String password
   ) throws Exception {
-      signupService.validateUserName(username, password);
+      loginService.sigUp(username, password);
 
 
   }
