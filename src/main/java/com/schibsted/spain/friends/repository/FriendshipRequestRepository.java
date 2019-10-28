@@ -22,6 +22,9 @@ public interface FriendshipRequestRepository extends JpaRepository<FriendshipReq
     @Query(value = "SELECT t FROM FriendshipRequest t where t.userFrom = :userFrom AND t.userTo = :userTo AND t.status = :status")
     public List<FriendshipRequest> findByUserFromAndUserToAndStatus(@Param("userFrom") String userFrom, @Param("userTo") String userTo, @Param("status")  String status);
 
+    @Query(value = "SELECT t FROM FriendshipRequest t where t.status = :status AND (t.userFrom = :userFrom OR t.userTo = :userTo)")
+    public List<FriendshipRequest> findByUserFromOrUserToAndStatus(@Param("userFrom") String userFrom, @Param("userTo") String userTo, @Param("status")  String status);
+
     @Query(value = "SELECT t FROM FriendshipRequest t where t.userFrom = :userFrom AND t.userTo = :userTo AND ( t.status = 'pending' OR  t.status = 'accepted') ")
     public List<FriendshipRequest> findByUserFromAndUserToInPendingOrAccepted(@Param("userFrom") String userFrom, @Param("userTo") String userTo);
 

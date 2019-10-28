@@ -13,11 +13,8 @@ import java.util.List;
 @Repository
 public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
 
-    @Query(value = "SELECT t FROM Friendship t where t.status = 'active' AND (t.userFrom = :userName OR t.userTo = :userName)")
-    public List<Friendship> findByUserActive(String userName);
-
-    @Query(value = "SELECT * FROM Friendship t where t.user_from = :userFrom AND t.user_to = :userTo AND t.status = 'pending' ORDER BY id DESC LIMIT 1", nativeQuery = true)
-    public List<Friendship> findByUserFromAndUserToInPending(@Param("userFrom") String userFrom, @Param("userTo") String userTo);
+    @Query(value = "SELECT t FROM Friendship t where t.status = :status AND (t.userFrom = :userName OR t.userTo = :userName)")
+    public List<Friendship> findByUserAndStatus(String userName, String status);
 
 
 }

@@ -80,7 +80,6 @@ public class FriendshipLegacyController {
     loginService.signIn(username, password);
 
     ArrayList <String> friends = friendshipService.getActiveRelationship(username);
-    friends.addAll(friendshipService.getPendingRelationshipRequest(username));
 
     return friends;
   }
