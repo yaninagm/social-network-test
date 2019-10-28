@@ -30,6 +30,7 @@ public class SignupLegacyController {
           @RequestParam("username") String username,
           @RequestHeader("X-Password") String password
   ) throws Exception {
+      System.out.println("[method:signUp] [username: "+username+"]");
       validation.validateIfUserExist(username);
       validation.validateUserName(username);
       validation.validatePassword(password);

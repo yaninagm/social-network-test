@@ -30,7 +30,6 @@ public class ValidationsService {
     }
 
     public void validateIfUserExist(String username){
-        System.out.println("[method:validateIfUserExist] [username:]"+username);
         if(!(userRepository.findByUserName(username).isEmpty()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exist yet");
     }

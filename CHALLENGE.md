@@ -14,15 +14,15 @@ The use cases that need to be implemented are:
   * A new user requests to register to our service, providing its username and password.
   * Username must be unique, from 5 to 10 alphanumeric characters.
   * Password from 8 to 12 alphanumeric characters.
-* Request friendship
-  * A registered user requests friendship to another registered user.
-  * A user cannot request friendship to himself or to a user that already has a pending request from him.
-* Accept friendship
-  * A registered user accepts a requested friendship.
-  * Once accepted both users become friends forever and cannot request friendship again.
-* Decline friendship
-  * A registered user declines a requested friendship.
-  * Once declined friendship can be requested again.
+* Request friendshipRequest
+  * A registered user requests friendshipRequest to another registered user.
+  * A user cannot request friendshipRequest to himself or to a user that already has a pending request from him.
+* Accept friendshipRequest
+  * A registered user accepts a requested friendshipRequest.
+  * Once accepted both users become friends forever and cannot request friendshipRequest again.
+* Decline friendshipRequest
+  * A registered user declines a requested friendshipRequest.
+  * Once declined friendshipRequest can be requested again.
 * Friends
   * List friends of a registered user.
   

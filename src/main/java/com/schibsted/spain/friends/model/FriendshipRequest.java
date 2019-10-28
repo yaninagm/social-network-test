@@ -1,10 +1,11 @@
 package com.schibsted.spain.friends.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
-@Table(name = "friendship")
-public class Friendship {
+@Table(name = "friendshiprequest")
+public class FriendshipRequest {
 
 
     @Id
@@ -13,6 +14,9 @@ public class Friendship {
     private String userFrom;
     private String userTo;
     private String status;
+    private Date dateCreated;
+    private Date dateLastModified;
+
 
     @Column(name = "user_from", nullable = true)
     public String getUserFrom() {
@@ -36,18 +40,46 @@ public class Friendship {
     public String getStatus() {
         return status;
     }
-
     public void setStatus(String status) {
         this.status = status;
     }
 
-    public Friendship() {
+    public Long getId() {
+        return id;
     }
 
-    public Friendship(String userFrom, String userTo, String status) {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Column(name = "date_created", nullable = true)
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    @Column(name = "date_last_modified", nullable = true)
+    public Date getDateLastModified() {
+        return dateLastModified;
+    }
+
+    public void setDateLastModified(Date dateLastModified) {
+        this.dateLastModified = dateLastModified;
+    }
+
+
+    public FriendshipRequest() {
+    }
+
+    public FriendshipRequest(String userFrom, String userTo, String status, Date dateCreated, Date dateLastModified) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.status = status;
+        this.dateCreated = dateCreated;
+        this.dateLastModified = dateLastModified;
     }
 
     @Override
@@ -57,6 +89,8 @@ public class Friendship {
                 ", userFrom='" + userFrom + '\'' +
                 ", userTo='" + userTo + '\'' +
                 ", status='" + status + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", dateLastModified=" + dateLastModified +
                 '}';
     }
 }

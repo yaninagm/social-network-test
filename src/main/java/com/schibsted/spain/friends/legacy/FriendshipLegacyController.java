@@ -1,7 +1,7 @@
 package com.schibsted.spain.friends.legacy;
 
-import com.schibsted.spain.friends.model.Friendship;
-import com.schibsted.spain.friends.repository.FriendShipRepository;
+import com.schibsted.spain.friends.model.FriendshipRequest;
+import com.schibsted.spain.friends.repository.FriendShipRequestRepository;
 import com.schibsted.spain.friends.repository.UserRepository;
 import com.schibsted.spain.friends.service.FriendShipService;
 import com.schibsted.spain.friends.service.LoginService;
@@ -28,7 +28,7 @@ public class FriendshipLegacyController {
   @Autowired
   UserRepository userRepository;
   @Autowired
-  FriendShipRepository friendShipRepository;
+  FriendShipRequestRepository friendShipRequestRepository;
   @Autowired
   ValidationsService validationsService;
   @Autowired
@@ -45,7 +45,6 @@ public class FriendshipLegacyController {
     loginService.signIn(usernameFrom, password);
     if(userRepository.findByUserName(usernameTo).isEmpty())
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User to invited doesn't exist");
-
     friendshipService.requestFriendship(usernameFrom, usernameTo);
   }
 
@@ -56,22 +55,9 @@ public class FriendshipLegacyController {
       @RequestHeader("X-Password") String password
   ) {
     System.out.println("[method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
-
     loginService.signIn(usernameFrom, password);
+    friendshipService.acceptFriendship(usernameFrom, usernameTo);
 
-    List<Friendship> relations = friendShipRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
-
-    if (relations.size() > 0) {
-      for (Friendship friendship : relations){
-        if(Objects.equals(friendship.getStatus(), "accepted")){
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are already friends");
-        }
-        friendship.setStatus("accepted");
-        friendShipRepository.save(friendship);
-        return;
-      }
-    }
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
   }
 
   @PostMapping("/decline")
@@ -81,23 +67,8 @@ public class FriendshipLegacyController {
       @RequestHeader("X-Password") String password
   ) {
     System.out.println("[method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
-
     loginService.signIn(usernameFrom, password);
-
-    List<Friendship> relations = friendShipRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
-
-    if (relations.size() > 0) {
-      for (Friendship friendship : relations){
-        if(Objects.equals(friendship.getStatus(), "accepted") || Objects.equals(friendship.getStatus(), "declined")){
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't declined request");
-        }
-        friendship.setStatus("declined");
-        friendShipRepository.save(friendship);
-        return;
-      }
-    }
-
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
+    friendshipService.declineFriendship(usernameFrom,usernameTo);
   }
 
   @GetMapping("/list")
@@ -107,13 +78,12 @@ public class FriendshipLegacyController {
   ) {
     System.out.println("[method:listFriends] [username: "+username+"]");
     loginService.signIn(username, password);
-    List<Friendship> relationships = friendShipRepository.findByUserFromAccepted(username);
+    List<FriendshipRequest> relationships = friendShipRequestRepository.findByUserFromAccepted(username);
 
     ArrayList <String> friends = new ArrayList<>();
 
-
     if (relationships.size() <= 0){
-      List<Friendship> relationshipsNotDeclined = friendShipRepository.findByUserFromNotDeclined(username);
+      List<FriendshipRequest> relationshipsNotDeclined = friendShipRequestRepository.findByUserFromNotDeclined(username);
       if (relationshipsNotDeclined.size() == 0) {
         return friends;
       }
@@ -121,7 +91,7 @@ public class FriendshipLegacyController {
     }
 
 
-    for (Friendship relationship : relationships) {
+    for (FriendshipRequest relationship : relationships) {
       if (Objects.equals(relationship.getUserTo(), username)) {
         friends.add(relationship.getUserFrom());
       }else {
