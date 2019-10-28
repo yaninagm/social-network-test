@@ -1,9 +1,9 @@
 package com.schibsted.spain.friends.legacy;
 
-import com.schibsted.spain.friends.model.FriendshipRequest;
-import com.schibsted.spain.friends.repository.FriendShipRequestRepository;
+import com.schibsted.spain.friends.repository.FriendshipRepository;
+import com.schibsted.spain.friends.repository.FriendshipRequestRepository;
 import com.schibsted.spain.friends.repository.UserRepository;
-import com.schibsted.spain.friends.service.FriendShipService;
+import com.schibsted.spain.friends.service.FriendshipService;
 import com.schibsted.spain.friends.service.LoginService;
 import com.schibsted.spain.friends.service.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/friendship")
 public class FriendshipLegacyController {
   @Autowired
-  FriendShipService friendshipService;
+  FriendshipService friendshipService;
   @Autowired
   UserRepository userRepository;
   @Autowired
-  FriendShipRequestRepository friendShipRequestRepository;
+  FriendshipRequestRepository friendShipRequestRepository;
+  @Autowired
+  FriendshipRepository friendShipRepository;
   @Autowired
   ValidationsService validationsService;
   @Autowired
@@ -78,26 +78,9 @@ public class FriendshipLegacyController {
   ) {
     System.out.println("[method:listFriends] [username: "+username+"]");
     loginService.signIn(username, password);
-    List<FriendshipRequest> relationships = friendShipRequestRepository.findByUserFromAccepted(username);
 
-    ArrayList <String> friends = new ArrayList<>();
-
-    if (relationships.size() <= 0){
-      List<FriendshipRequest> relationshipsNotDeclined = friendShipRequestRepository.findByUserFromNotDeclined(username);
-      if (relationshipsNotDeclined.size() == 0) {
-        return friends;
-      }
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't friends");
-    }
-
-
-    for (FriendshipRequest relationship : relationships) {
-      if (Objects.equals(relationship.getUserTo(), username)) {
-        friends.add(relationship.getUserFrom());
-      }else {
-        friends.add(relationship.getUserTo());
-      }
-    }
+    ArrayList <String> friends = friendshipService.getActiveRelationship(username);
+    friends.addAll(friendshipService.getPendingRelationshipRequest(username));
 
     return friends;
   }
