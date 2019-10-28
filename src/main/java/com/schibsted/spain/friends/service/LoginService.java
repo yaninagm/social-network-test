@@ -20,7 +20,7 @@ public class LoginService {
 
 
     public  void signUp(String username, String password){
-        System.out.println("[method:signUp][userName: "+ username + " ] [password: "+password + " ]");
+        System.out.println("[method:signUp][userName: "+ username + "]");
         //TODO hashar password
         User newUser = new User(username, password);
         userRepository.save(newUser);
@@ -30,13 +30,14 @@ public class LoginService {
         System.out.println("[method:signIn][userName: "+ username + " ] [password: "+password + " ]");
 
         List<User> users = userRepository.findByUserName(username);
-        if(users.isEmpty() || users.size() == 0)
+        if(users.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist");
+        if (users.size() > 1 )
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Duplicate username");
+        User user = users.iterator().next();
+        if(!password.equals(user.getPassword()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect Password");
 
-        for (User user : users){
-            if(!Objects.equals(user.getPassword(), password))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect Password");
-        }
     }
 
 

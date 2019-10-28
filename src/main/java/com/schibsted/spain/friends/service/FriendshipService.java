@@ -3,6 +3,7 @@ package com.schibsted.spain.friends.service;
 import com.schibsted.spain.friends.config.Constants;
 import com.schibsted.spain.friends.model.Friendship;
 import com.schibsted.spain.friends.model.FriendshipRequest;
+import com.schibsted.spain.friends.model.User;
 import com.schibsted.spain.friends.repository.FriendshipRequestRepository;
 import com.schibsted.spain.friends.repository.FriendshipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,9 @@ public class FriendshipService {
 
     public FriendshipRequest acceptFriendship(String usernameFrom, String usernameTo){
         List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
+
         for (FriendshipRequest friendshipRequest : relations){
-            if(Objects.equals(friendshipRequest.getStatus(), Constants.STATUS_ACCEPTED)){
+            if(friendshipRequest.getStatus().equals(Constants.STATUS_ACCEPTED)){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are already friends");
             }
             friendshipRequest.setStatus(Constants.STATUS_ACCEPTED);
@@ -49,7 +51,7 @@ public class FriendshipService {
     public FriendshipRequest declineFriendship(String usernameFrom, String usernameTo) {
         List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
         for (FriendshipRequest friendshipRequest : relations) {
-            if (!Objects.equals(friendshipRequest.getStatus(), Constants.STATUS_PENDING)) {
+            if (!friendshipRequest.getStatus().equals(Constants.STATUS_PENDING)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't declined request");
             }
             friendshipRequest.setStatus(Constants.STATUS_DECLINE);
@@ -88,7 +90,7 @@ public class FriendshipService {
         List<Friendship> relationship = friendshipRepository.findByUserActive(username);
         ArrayList <String> friends = new ArrayList<>();
         for (Friendship relationship1 : relationship) {
-            if (Objects.equals(relationship1.getUserTo(), username)) {
+            if (relationship1.getUserTo().equals(username)) {
                 friends.add(relationship1.getUserFrom());
             }else {
                 friends.add(relationship1.getUserTo());

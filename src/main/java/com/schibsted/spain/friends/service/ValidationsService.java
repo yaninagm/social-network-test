@@ -31,13 +31,6 @@ public class ValidationsService {
 
     public void validateIfUserExist(String username){
         if(!(userRepository.findByUserName(username).isEmpty()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exist yet");
-    }
-
-    public User validateIsUserRegistered(String username){
-        List<User> users = userRepository.findByUserName(username);
-        if(users.isEmpty() )
-            return null;
-        return users.get(0);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exist");
     }
 }
