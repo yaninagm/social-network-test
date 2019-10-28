@@ -3,6 +3,7 @@ package com.schibsted.spain.friends.service;
 import com.schibsted.spain.friends.config.Constants;
 import com.schibsted.spain.friends.model.Friendship;
 import com.schibsted.spain.friends.model.FriendshipRequest;
+import com.schibsted.spain.friends.model.User;
 import com.schibsted.spain.friends.repository.FriendshipRequestRepository;
 import com.schibsted.spain.friends.repository.FriendshipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,38 +35,34 @@ public class FriendshipService {
     public FriendshipRequest acceptFriendship(String usernameFrom, String usernameTo){
         List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserToAndStatus(usernameTo, usernameFrom, Constants.STATUS_PENDING);
 
-        for (FriendshipRequest friendshipRequest : relations){
-            if(friendshipRequest.getStatus().equals(Constants.STATUS_ACCEPTED)){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are already friends");
-            }
-            friendshipRequest.setStatus(Constants.STATUS_ACCEPTED);
-            friendshipRequest.setDateLastModified(new Date());
-            friendshipRequestRepository.save(friendshipRequest);
-            Friendship friendship = new Friendship(usernameTo, usernameFrom, "active");
-            friendshipRepository.save(friendship);
-            return friendshipRequest;
-        }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
+        if (relations.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request for accept");
+
+        FriendshipRequest friendshipRequest = relations.iterator().next();
+        friendshipRequest.setStatus(Constants.STATUS_ACCEPTED);
+        friendshipRequest.setDateLastModified(new Date());
+        friendshipRequestRepository.save(friendshipRequest);
+
+        Friendship friendship = new Friendship(usernameTo, usernameFrom, "active");
+        friendshipRepository.save(friendship);
+
+        return friendshipRequest;
+
+
     }
 
     public FriendshipRequest declineFriendship(String usernameFrom, String usernameTo) {
-        List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
-        for (FriendshipRequest friendshipRequest : relations) {
-            if (!friendshipRequest.getStatus().equals(Constants.STATUS_PENDING)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't declined request");
-            }
-            friendshipRequest.setStatus(Constants.STATUS_DECLINED);
-            friendshipRequestRepository.save(friendshipRequest);
+        List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserToAndStatus(usernameTo, usernameFrom, Constants.STATUS_PENDING);
+        if (relations.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
 
-            List<Friendship> friendships = friendshipRepository.findByUserFromAndUserToInPending(usernameFrom, usernameTo);
-            for (Friendship friendship : friendships) {
-                friendship.setStatus("cancelled");
-                friendshipRepository.save(friendship);
-            }
+        FriendshipRequest friendshipRequest = relations.iterator().next();
+        friendshipRequest.setStatus(Constants.STATUS_DECLINED);
+        friendshipRequest.setDateLastModified(new Date());
+        friendshipRequestRepository.save(friendshipRequest);
 
-            return null;
-        }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
+        return friendshipRequest;
+
     }
 
 
