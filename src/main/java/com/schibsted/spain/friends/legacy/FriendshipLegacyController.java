@@ -1,6 +1,5 @@
 package com.schibsted.spain.friends.legacy;
 
-import com.schibsted.spain.friends.repository.FriendshipRepository;
 import com.schibsted.spain.friends.repository.FriendshipRequestRepository;
 import com.schibsted.spain.friends.repository.UserRepository;
 import com.schibsted.spain.friends.service.FriendshipService;
@@ -28,8 +27,6 @@ public class FriendshipLegacyController {
   @Autowired
   FriendshipRequestRepository friendShipRequestRepository;
   @Autowired
-  FriendshipRepository friendShipRepository;
-  @Autowired
   ValidationsService validationsService;
   @Autowired
   LoginService loginService;
@@ -44,7 +41,7 @@ public class FriendshipLegacyController {
 
     loginService.signIn(usernameFrom, password);
     if(userRepository.findByUserName(usernameTo).isEmpty())
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User to invited doesn't exist");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The provider usernameTo doesn't exist");
     friendshipService.requestFriendship(usernameFrom, usernameTo);
   }
 
@@ -79,7 +76,7 @@ public class FriendshipLegacyController {
     System.out.println("[method:listFriends] [username: "+username+"]");
     loginService.signIn(username, password);
 
-    ArrayList <String> friends = friendshipService.getActiveRelationship(username);
+    ArrayList <String> friends = friendshipService.getAcceptFriendshipRequest(username);
 
     return friends;
   }
