@@ -31,12 +31,12 @@ public class LoginService {
 
         List<User> users = userRepository.findByUserName(username);
         if(users.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User doesn't exist");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or password incorrect");
         if (users.size() > 1 )
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Duplicate username");
         User user = users.iterator().next();
         if(!password.equals(user.getPassword()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect Password");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or password incorrect");
 
     }
 

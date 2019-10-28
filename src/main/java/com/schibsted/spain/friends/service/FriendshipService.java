@@ -3,7 +3,6 @@ package com.schibsted.spain.friends.service;
 import com.schibsted.spain.friends.config.Constants;
 import com.schibsted.spain.friends.model.Friendship;
 import com.schibsted.spain.friends.model.FriendshipRequest;
-import com.schibsted.spain.friends.model.User;
 import com.schibsted.spain.friends.repository.FriendshipRequestRepository;
 import com.schibsted.spain.friends.repository.FriendshipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +21,18 @@ public class FriendshipService {
     FriendshipRepository friendshipRepository;
 
     public FriendshipRequest requestFriendship(String usernameFrom, String usernameTo){
-        List<FriendshipRequest> relation = friendshipRequestRepository.findByUserFromAndUserToInPending(usernameFrom, usernameTo);
+        List<FriendshipRequest> relation = friendshipRequestRepository.findByUserFromAndUserToInPendingOrAccepted(usernameFrom, usernameTo);
         if(!relation.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't request in status pending");
 
-        FriendshipRequest friendshipRequest = new FriendshipRequest(usernameFrom, usernameTo, Constants.STATUS_PENDING , new Date(),  new Date());
+        Date newDate = new Date();
+        FriendshipRequest friendshipRequest = new FriendshipRequest(usernameFrom, usernameTo, Constants.STATUS_PENDING , newDate,  newDate);
         friendshipRequestRepository.save(friendshipRequest);
         return friendshipRequest;
     }
 
     public FriendshipRequest acceptFriendship(String usernameFrom, String usernameTo){
-        List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserTo(usernameTo, usernameFrom);
+        List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserToAndStatus(usernameTo, usernameFrom, Constants.STATUS_PENDING);
 
         for (FriendshipRequest friendshipRequest : relations){
             if(friendshipRequest.getStatus().equals(Constants.STATUS_ACCEPTED)){
@@ -54,7 +54,7 @@ public class FriendshipService {
             if (!friendshipRequest.getStatus().equals(Constants.STATUS_PENDING)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't declined request");
             }
-            friendshipRequest.setStatus(Constants.STATUS_DECLINE);
+            friendshipRequest.setStatus(Constants.STATUS_DECLINED);
             friendshipRequestRepository.save(friendshipRequest);
 
             List<Friendship> friendships = friendshipRepository.findByUserFromAndUserToInPending(usernameFrom, usernameTo);
@@ -72,11 +72,11 @@ public class FriendshipService {
     //All request are declined => BAD REQUEST
     public ArrayList <String> getPendingRelationshipRequest(String username){
 
-        List<FriendshipRequest> relationshipRequest = friendshipRequestRepository.findByUserFromAccepted(username);
+        List<FriendshipRequest> relationshipRequest = friendshipRequestRepository.findByUserFromAndStatus(username, Constants.STATUS_ACCEPTED);
 
         ArrayList <String> friends = new ArrayList<>();
         if (relationshipRequest.size() <= 0){
-            List<FriendshipRequest> relationshipsNotDeclined = friendshipRequestRepository.findByUserFromDeclined(username);
+            List<FriendshipRequest> relationshipsNotDeclined = friendshipRequestRepository.findByUserFromAndStatus(username, Constants.STATUS_DECLINED);
             if (relationshipsNotDeclined.size() > 0) {
                 return friends;
             }
