@@ -24,7 +24,7 @@ public class FriendshipService {
     public FriendshipRequest requestFriendship(String usernameFrom, String usernameTo){
         List<FriendshipRequest> relation = friendshipRequestRepository.findByUserFromAndUserToInPending(usernameFrom, usernameTo);
         if(!relation.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Yo have request pending");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't request in status pending");
 
         FriendshipRequest friendshipRequest = new FriendshipRequest(usernameFrom, usernameTo, Constants.STATUS_PENDING , new Date(),  new Date());
         friendshipRequestRepository.save(friendshipRequest);
