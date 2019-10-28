@@ -27,27 +27,13 @@ public class FriendshipService {
         return friendshipRequest;
     }
 
-    public FriendshipRequest acceptFriendship(String usernameFrom, String usernameTo){
-        List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserToAndStatus(usernameTo, usernameFrom, Constants.STATUS_PENDING);
-
-        if (relations.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request ");
-
-        FriendshipRequest friendshipRequest = relations.iterator().next();
-        friendshipRequest.setStatus(Constants.STATUS_ACCEPTED);
-        friendshipRequest.setDateLastModified(new Date());
-        friendshipRequestRepository.save(friendshipRequest);
-
-        return friendshipRequest;
-    }
-
-    public FriendshipRequest declineFriendship(String usernameFrom, String usernameTo) {
+    public FriendshipRequest changeStatusFriendshipRequest(String usernameFrom, String usernameTo, String newStatus) {
         List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserToAndStatus(usernameTo, usernameFrom, Constants.STATUS_PENDING);
         if (relations.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
 
         FriendshipRequest friendshipRequest = relations.iterator().next();
-        friendshipRequest.setStatus(Constants.STATUS_DECLINED);
+        friendshipRequest.setStatus(newStatus);
         friendshipRequest.setDateLastModified(new Date());
         friendshipRequestRepository.save(friendshipRequest);
 

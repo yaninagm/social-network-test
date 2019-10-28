@@ -1,5 +1,6 @@
 package com.schibsted.spain.friends.legacy;
 
+import com.schibsted.spain.friends.config.Constants;
 import com.schibsted.spain.friends.repository.FriendshipRequestRepository;
 import com.schibsted.spain.friends.repository.UserRepository;
 import com.schibsted.spain.friends.service.FriendshipService;
@@ -53,7 +54,7 @@ public class FriendshipLegacyController {
   ) {
     System.out.println("[method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
     loginService.signIn(usernameFrom, password);
-    friendshipService.acceptFriendship(usernameFrom, usernameTo);
+    friendshipService.changeStatusFriendshipRequest(usernameFrom,usernameTo, Constants.STATUS_ACCEPTED);
 
   }
 
@@ -65,7 +66,8 @@ public class FriendshipLegacyController {
   ) {
     System.out.println("[method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
     loginService.signIn(usernameFrom, password);
-    friendshipService.declineFriendship(usernameFrom,usernameTo);
+    friendshipService.changeStatusFriendshipRequest(usernameFrom,usernameTo, Constants.STATUS_DECLINED);
+
   }
 
   @GetMapping("/list")
