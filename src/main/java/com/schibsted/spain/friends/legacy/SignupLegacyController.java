@@ -16,7 +16,6 @@ public class SignupLegacyController {
 
     @Autowired
     private LoginService loginService;
-
     @Autowired
     ValidationsService validation;
 

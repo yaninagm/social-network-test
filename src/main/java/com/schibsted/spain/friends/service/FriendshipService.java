@@ -20,7 +20,6 @@ public class FriendshipService {
         List<FriendshipRequest> relation = friendshipRequestRepository.findByUserFromAndUserToInPendingOrAccepted(usernameFrom, usernameTo);
         if(!relation.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request already exist");
-
         Date newDate = new Date();
         FriendshipRequest friendshipRequest = new FriendshipRequest(usernameFrom, usernameTo, Constants.STATUS_PENDING , newDate,  newDate);
         friendshipRequestRepository.save(friendshipRequest);
@@ -31,12 +30,10 @@ public class FriendshipService {
         List<FriendshipRequest> relations = friendshipRequestRepository.findByUserFromAndUserToAndStatus(usernameTo, usernameFrom, Constants.STATUS_PENDING);
         if (relations.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't any request");
-
         FriendshipRequest friendshipRequest = relations.iterator().next();
         friendshipRequest.setStatus(newStatus);
         friendshipRequest.setDateLastModified(new Date());
         friendshipRequestRepository.save(friendshipRequest);
-
         return friendshipRequest;
     }
 

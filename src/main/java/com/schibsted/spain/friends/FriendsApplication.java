@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EntityScan("com.schibsted.spain.friends")
-@EnableJpaRepositories("com.schibsted.spain.friends.repository")
+
 @SpringBootApplication
 public class FriendsApplication {
   public static void main(String[] args) {

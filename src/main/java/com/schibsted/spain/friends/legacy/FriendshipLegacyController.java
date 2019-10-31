@@ -54,7 +54,7 @@ public class FriendshipLegacyController {
   ) {
     System.out.println("[method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
     loginService.signIn(usernameFrom, password);
-    friendshipService.changeStatusFriendshipRequest(usernameFrom,usernameTo, Constants.STATUS_ACCEPTED);
+    friendshipService.changeStatusFriendshipRequest(usernameFrom, usernameTo, Constants.STATUS_ACCEPTED);
 
   }
 
@@ -66,7 +66,7 @@ public class FriendshipLegacyController {
   ) {
     System.out.println("[method:acceptFriendship] [usernameFrom: "+usernameFrom+"] [usernameTo: "+usernameTo +"]");
     loginService.signIn(usernameFrom, password);
-    friendshipService.changeStatusFriendshipRequest(usernameFrom,usernameTo, Constants.STATUS_DECLINED);
+    friendshipService.changeStatusFriendshipRequest(usernameFrom, usernameTo, Constants.STATUS_DECLINED);
 
   }
 

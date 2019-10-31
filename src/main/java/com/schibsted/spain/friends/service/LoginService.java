@@ -27,13 +27,13 @@ public class LoginService {
     }
 
     public  void signIn(String username, String password){
-        System.out.println("[method:signIn][userName: "+ username + "]");
+        System.out.println("[method:signIn][userName: "+ username + " ]");
 
         List<User> users = userRepository.findByUserName(username);
         if(users.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or password incorrect");
         if (users.size() > 1 )
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Duplicate username");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "");
         User user = users.iterator().next();
         String passHashed = securePass(password);
         if(!passHashed.equals(user.getPassword()))
