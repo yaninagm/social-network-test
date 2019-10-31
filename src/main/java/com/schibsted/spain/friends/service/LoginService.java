@@ -33,7 +33,7 @@ public class LoginService {
         if(users.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or password incorrect");
         if (users.size() > 1 )
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Duplicate username");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "");
         User user = users.iterator().next();
         if(!password.equals(user.getPassword()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or password incorrect");

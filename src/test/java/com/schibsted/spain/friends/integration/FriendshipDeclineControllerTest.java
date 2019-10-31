@@ -105,7 +105,7 @@ public class FriendshipDeclineControllerTest {
 
         // ApiCall
         mockMvc.perform(
-                post("/friendship/accept")
+                post("/friendship/decline")
                         .param("usernameFrom", "Mario")
                         .param("usernameTo", "Estefania")
                         .header("X-Password", "pass123456")

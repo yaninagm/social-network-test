@@ -71,8 +71,6 @@ public class FriendshipAceptControllerTest {
     @Autowired
     FriendshipService friendshipService;
 
-
-
     @Autowired
     private MockMvc mockMvc;
     @MockBean
