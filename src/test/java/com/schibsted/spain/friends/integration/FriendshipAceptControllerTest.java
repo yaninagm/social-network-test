@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,6 +59,7 @@ public class FriendshipAceptControllerTest {
         }
     }
     @Autowired
+    @MockBean
     LoginService loginService;
 
 
@@ -92,6 +94,8 @@ public class FriendshipAceptControllerTest {
         users.add(user);
         Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
 
+        when(loginService.securePass("pass123456")).thenReturn("pass123456");
+
         Date date = new Date();
         // MOCK findByUserFromAndUserToInPendingOrAccepted
         ArrayList<FriendshipRequest> friendshipRequests =  new ArrayList<>();
@@ -120,6 +124,7 @@ public class FriendshipAceptControllerTest {
         User user = new User("Mario", "pass123456");
         users.add(user);
         Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        when(loginService.securePass("pass123456")).thenReturn("pass123456");
 
         Date date = new Date();
         // MOCK findByUserFromAndUserToInPendingOrAccepted

@@ -57,6 +57,7 @@ public class FriendshipDeclineControllerTest {
         }
     }
     @Autowired
+    @MockBean
     LoginService loginService;
 
 
@@ -92,6 +93,7 @@ public class FriendshipDeclineControllerTest {
         User user = new User("Mario", "pass123456");
         users.add(user);
         Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        when(loginService.securePass("pass123456")).thenReturn("pass123456");
 
         Date date = new Date();
         // MOCK findByUserFromAndUserToInPendingOrAccepted

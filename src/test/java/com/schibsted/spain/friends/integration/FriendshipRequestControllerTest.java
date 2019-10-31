@@ -63,6 +63,7 @@ public class FriendshipRequestControllerTest {
         }
     }
     @Autowired
+    @MockBean
     LoginService loginService;
 
 
@@ -98,6 +99,7 @@ public class FriendshipRequestControllerTest {
         User user = new User("Mario", "pass123456");
         users.add(user);
         Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        when(loginService.securePass("pass123456")).thenReturn("pass123456");
 
         // MOCK findByUserName
         List<User> usersEstefania = new ArrayList<>();
