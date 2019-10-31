@@ -7,17 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Validation;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class LoginService {
 
     @Autowired
     private UserRepository userRepository;
-
-
 
     public  void signUp(String username, String password){
         System.out.println("[method:signUp][userName: "+ username + "]");

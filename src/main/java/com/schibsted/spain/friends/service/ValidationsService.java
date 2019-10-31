@@ -1,13 +1,10 @@
 package com.schibsted.spain.friends.service;
 
-import com.schibsted.spain.friends.model.User;
 import com.schibsted.spain.friends.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Service
 public class ValidationsService {
