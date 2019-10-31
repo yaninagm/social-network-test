@@ -42,6 +42,7 @@ public class FriendshipService {
 
     public ArrayList <String> getAcceptFriendshipRequest(String username){
         List<FriendshipRequest> friendshipRequests = friendshipRequestRepository.findByUserFromOrUserToAndStatus(username, Constants.STATUS_ACCEPTED);
+        System.out.println("[method:getAcceptFriendshipRequest] [friendshipRequests: "+friendshipRequests+"]");
         ArrayList <String> friends = new ArrayList<>();
         for (FriendshipRequest friendshipRequest : friendshipRequests) {
             if (friendshipRequest.getUserTo().equals(username)) {
@@ -50,6 +51,7 @@ public class FriendshipService {
                 friends.add(friendshipRequest.getUserTo());
             }
         }
+        System.out.println("[method:getAcceptFriendshipRequest] [friends: "+friends+"]");
         return friends;
     }
 
