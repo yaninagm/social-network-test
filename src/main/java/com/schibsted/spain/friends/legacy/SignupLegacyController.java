@@ -4,6 +4,7 @@ import com.schibsted.spain.friends.model.User;
 import com.schibsted.spain.friends.service.LoginService;
 import com.schibsted.spain.friends.service.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -21,7 +22,6 @@ public class SignupLegacyController {
 
     @Autowired
     private LoginService loginService;
-
     @Autowired
     ValidationsService validation;
 

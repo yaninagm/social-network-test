@@ -27,7 +27,7 @@ public class LoginService {
     }
 
     public  void signIn(String username, String password){
-        System.out.println("[method:signIn][userName: "+ username + " ] [password: "+password + " ]");
+        System.out.println("[method:signIn][userName: "+ username + " ]");
 
         List<User> users = userRepository.findByUserName(username);
         if(users.isEmpty())
