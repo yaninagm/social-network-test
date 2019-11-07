@@ -10,36 +10,17 @@ public class FriendshipRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userFrom;
-    private String userTo;
+    @ManyToOne
+    @JoinColumn (name = "user_from_id")
+    //@Column(name = "user_from", nullable = true)
+    private User userFrom;
+    @ManyToOne
+    @JoinColumn (name = "user_to_id")
+    //@Column(name = "user_to",  nullable = true)
+    private User userTo;
+    @Column(name = "status", nullable = true)
     private String status;
 
-
-    @Column(name = "user_from", nullable = true)
-    public String getUserFrom() {
-        return userFrom;
-    }
-
-    public void setUserFrom(String userFrom) {
-        this.userFrom = userFrom;
-    }
-
-    @Column(name = "user_to", nullable = true)
-    public String getUserTo() {
-        return userTo;
-    }
-
-    public void setUserTo(String userTo) {
-        this.userTo = userTo;
-    }
-
-    @Column(name = "status", nullable = true)
-    public String getStatus() {
-        return status;
-    }
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public Long getId() {
         return id;
@@ -49,21 +30,46 @@ public class FriendshipRequest {
         this.id = id;
     }
 
-    public FriendshipRequest() {
+    public User getUserFrom() {
+        return userFrom;
     }
 
-    public FriendshipRequest(String userFrom, String userTo, String status) {
+    public void setUserFrom(User userFrom) {
+        this.userFrom = userFrom;
+    }
+
+    public User getUserTo() {
+        return userTo;
+    }
+
+    public void setUserTo(User userTo) {
+        this.userTo = userTo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public FriendshipRequest(User userFrom, User userTo, String status) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.status = status;
     }
 
+    public FriendshipRequest() {
+    }
+
+
     @Override
     public String toString() {
         return "FriendshipRequest{" +
                 "id=" + id +
-                ", userFrom='" + userFrom + '\'' +
-                ", userTo='" + userTo + '\'' +
+                ", userFrom=" + userFrom +
+                ", userTo=" + userTo +
                 ", status='" + status + '\'' +
                 '}';
     }

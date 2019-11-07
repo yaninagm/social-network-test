@@ -37,7 +37,7 @@ public class ValidationsService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exist");
     }
 
-    public void validateUserWithPass(String username, String password){
+    public User validateUserWithPass(String username, String password){
         List<User> users = userRepository.findByUsername(username);
         if (users.isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or password incorrect");
         if (users.size() > 1) throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "");
@@ -45,5 +45,6 @@ public class ValidationsService {
         String passHashed = securityService.hashPass(password);
         if (!passHashed.equals(user.getPassword()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or password incorrect");
+        return user;
     }
 }

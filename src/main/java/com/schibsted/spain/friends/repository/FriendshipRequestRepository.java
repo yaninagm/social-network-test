@@ -11,12 +11,12 @@ import java.util.List;
 @Repository
 public interface FriendshipRequestRepository extends JpaRepository<FriendshipRequest, Long> {
 
-    @Query(value = "SELECT t FROM FriendshipRequest t where t.userFrom = :userFrom AND t.userTo = :userTo AND t.status = :status")
+    @Query(value = "SELECT t FROM FriendshipRequest t where t.userFrom.username = :userFrom AND t.userTo.username = :userTo AND t.status = :status")
     public List<FriendshipRequest> findByUserFromAndUserToAndStatus(@Param("userTo") String userTo, @Param("userFrom") String userFrom,  @Param("status")  String status);
 
-    @Query(value = "SELECT t FROM FriendshipRequest t where t.status = :status AND (t.userFrom = :username OR t.userTo = :username)")
-    public List<FriendshipRequest> findByUserFromOrUserToAndStatus(@Param("username") String username, @Param("status")  String status);
-
-    @Query(value = "SELECT t FROM FriendshipRequest t where t.userFrom = :userFrom AND t.userTo = :userTo AND ( t.status = 'pending' OR  t.status = 'accepted') ")
+    @Query(value = "SELECT t FROM FriendshipRequest t where t.userFrom.username = :userFrom AND t.userTo.username = :userTo AND ( t.status = 'pending' OR  t.status = 'accepted') ")
     public List<FriendshipRequest> findByUserFromAndUserToInPendingOrAccepted(@Param("userFrom") String userFrom, @Param("userTo") String userTo);
+
+    @Query(value = "SELECT t FROM FriendshipRequest t where t.status = :status AND (t.userFrom.username = :username OR t.userTo.username = :username)")
+    public List<FriendshipRequest> findByUserFromOrUserToAndStatus(@Param("username") String username, @Param("status")  String status);
 }

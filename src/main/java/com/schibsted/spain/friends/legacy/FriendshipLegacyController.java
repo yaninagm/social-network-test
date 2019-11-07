@@ -54,7 +54,7 @@ public class FriendshipLegacyController {
       @RequestParam("username") String username,
       @RequestHeader("X-Password") String password
   ) {
-    ArrayList <String> friends = friendshipService.getAcceptFriendshipRequest(username, password);
+    ArrayList <String> friends = friendshipService.listFriendshipRequest(username, password);
     return friends;
   }
 

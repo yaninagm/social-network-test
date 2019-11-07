@@ -3,6 +3,7 @@ package com.schibsted.spain.friends.service;
 import com.schibsted.spain.friends.config.Constants;
 import com.schibsted.spain.friends.dto.RequestFriendshipDto;
 import com.schibsted.spain.friends.model.FriendshipRequest;
+import com.schibsted.spain.friends.model.User;
 import com.schibsted.spain.friends.repository.FriendshipRequestRepository;
 import com.schibsted.spain.friends.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +24,18 @@ public class FriendshipService {
     UserRepository userRepository;
 
     public FriendshipRequest requestFriendship(RequestFriendshipDto requestFriendshipDto, String password){
-        validationsService.validateUserWithPass(requestFriendshipDto.getUsernameFrom(), password);
+        User userFrom = validationsService.validateUserWithPass(requestFriendshipDto.getUsernameFrom(), password);
         if(userRepository.findByUsername(requestFriendshipDto.getUsernameTo()).isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The provider usernameTo doesn't exist");
+        User userTo = userRepository.findByUsername(requestFriendshipDto.getUsernameTo()).iterator().next();
+
         List<FriendshipRequest> relation = friendshipRequestRepository.findByUserFromAndUserToInPendingOrAccepted(
                 requestFriendshipDto.getUsernameFrom(),
                 requestFriendshipDto.getUsernameTo());
-
         if(!relation.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request already exist");
-        FriendshipRequest friendshipRequest = new FriendshipRequest(requestFriendshipDto.getUsernameFrom(), requestFriendshipDto.getUsernameTo(), Constants.STATUS_PENDING );
+
+        FriendshipRequest friendshipRequest = new FriendshipRequest(userFrom, userTo, Constants.STATUS_PENDING );
         friendshipRequestRepository.save(friendshipRequest);
         return friendshipRequest;
     }
@@ -52,15 +55,15 @@ public class FriendshipService {
         return friendshipRequest;
     }
 
-    public ArrayList <String> getAcceptFriendshipRequest(String username, String password){
+    public ArrayList <String> listFriendshipRequest(String username, String password){
         validationsService.validateUserWithPass(username, password);
         List<FriendshipRequest> friendshipRequests = friendshipRequestRepository.findByUserFromOrUserToAndStatus(username, Constants.STATUS_ACCEPTED);
         ArrayList <String> friends = new ArrayList<>();
         for (FriendshipRequest friendshipRequest : friendshipRequests) {
-            if (friendshipRequest.getUserTo().equals(username)) {
-                friends.add(friendshipRequest.getUserFrom());
+            if (friendshipRequest.getUserTo().getUsername().equals(username)) {
+                friends.add(friendshipRequest.getUserFrom().getUsername());
             }else {
-                friends.add(friendshipRequest.getUserTo());
+                friends.add(friendshipRequest.getUserTo().getUsername());
             }
         }
         return friends;
