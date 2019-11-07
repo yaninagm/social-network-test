@@ -7,15 +7,12 @@ import java.util.Date;
 @Table(name = "friendshiprequest")
 public class FriendshipRequest {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String userFrom;
     private String userTo;
     private String status;
-    private Date dateCreated;
-    private Date dateLastModified;
 
 
     @Column(name = "user_from", nullable = true)
@@ -52,34 +49,13 @@ public class FriendshipRequest {
         this.id = id;
     }
 
-    @Column(name = "date_created", nullable = true)
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    @Column(name = "date_last_modified", nullable = true)
-    public Date getDateLastModified() {
-        return dateLastModified;
-    }
-
-    public void setDateLastModified(Date dateLastModified) {
-        this.dateLastModified = dateLastModified;
-    }
-
-
     public FriendshipRequest() {
     }
 
-    public FriendshipRequest(String userFrom, String userTo, String status, Date dateCreated, Date dateLastModified) {
+    public FriendshipRequest(String userFrom, String userTo, String status) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.status = status;
-        this.dateCreated = dateCreated;
-        this.dateLastModified = dateLastModified;
     }
 
     @Override
@@ -89,8 +65,6 @@ public class FriendshipRequest {
                 ", userFrom='" + userFrom + '\'' +
                 ", userTo='" + userTo + '\'' +
                 ", status='" + status + '\'' +
-                ", dateCreated=" + dateCreated +
-                ", dateLastModified=" + dateLastModified +
                 '}';
     }
 }

@@ -22,7 +22,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,11 +87,11 @@ public class FriendshipAceptControllerTest {
     @Test
     public void requestFriendshipOk() throws Exception{
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("Mario", "pass123456");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        Mockito.doReturn(users).when(userRepository).findByUsername("Mario");
 
         when(loginService.securePass("pass123456")).thenReturn("pass123456");
 
@@ -119,11 +118,11 @@ public class FriendshipAceptControllerTest {
     @Test
     public void requestFriendshipPending() throws Exception{
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("Mario", "pass123456");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        Mockito.doReturn(users).when(userRepository).findByUsername("Mario");
         when(loginService.securePass("pass123456")).thenReturn("pass123456");
 
         Date date = new Date();

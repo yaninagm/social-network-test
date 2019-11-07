@@ -1,9 +1,7 @@
 package com.schibsted.spain.friends.integration;
 
-import com.schibsted.spain.friends.config.Constants;
 import com.schibsted.spain.friends.legacy.FriendshipLegacyController;
 import com.schibsted.spain.friends.legacy.SignupLegacyController;
-import com.schibsted.spain.friends.model.FriendshipRequest;
 import com.schibsted.spain.friends.model.User;
 import com.schibsted.spain.friends.repository.FriendshipRequestRepository;
 import com.schibsted.spain.friends.repository.UserRepository;
@@ -23,10 +21,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -100,11 +96,11 @@ public class SignUpControllerTest {
     @Test
     public void requestFriendshipOk() throws Exception{
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("MarioPeder", "pass123456");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("MarioPeder");
+        Mockito.doReturn(users).when(userRepository).findByUsername("MarioPeder");
 
         // MOCK findByUserFromAndUserToInPendingOrAccepted
         when(userRepository.save(any(User.class))).thenReturn(user);

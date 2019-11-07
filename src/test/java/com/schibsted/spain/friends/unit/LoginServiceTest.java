@@ -2,7 +2,6 @@ package com.schibsted.spain.friends.unit;
 
 import com.schibsted.spain.friends.model.User;
 import com.schibsted.spain.friends.repository.UserRepository;
-import com.schibsted.spain.friends.service.LoginService;
 import com.schibsted.spain.friends.service.ValidationsService;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,8 +37,6 @@ public class LoginServiceTest {
 
     @Autowired
     ValidationsService validationsService;
-    @Autowired
-    LoginService loginService;
     @MockBean
     UserRepository userRepository;
     @Rule
@@ -53,28 +50,28 @@ public class LoginServiceTest {
 
     @Test
     public void signInIncorrectPass() {
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("MarioMoran", "pass123456");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("MarioMoran");
+        Mockito.doReturn(users).when(userRepository).findByUsername("MarioMoran");
 
         exceptionRule.expect(Exception.class);
         exceptionRule.expectMessage("User or password incorrect");
-        loginService.signIn("MarioMoran", "pass1234");
+        validationsService.validateUserWithPass("MarioMoran", "pass1234");
     }
 
     @Test
     public void signInIncorrectUser() {
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("MarioMoran", "pass123456");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("MarioMoran");
+        Mockito.doReturn(users).when(userRepository).findByUsername("MarioMoran");
 
         exceptionRule.expect(Exception.class);
         exceptionRule.expectMessage("User or password incorrect");
-        loginService.signIn("Mario", "pass123456");
+        validationsService.validateUserWithPass("Mario", "pass123456");
     }
 
 }

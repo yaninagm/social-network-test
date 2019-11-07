@@ -85,11 +85,11 @@ public class FriendshipListControllerTest {
         friendshipRequests.add(friendshipRequest4);
         Mockito.doReturn(friendshipRequests).when(friendshipRequestRepository).findByUserFromOrUserToAndStatus("Mario", "accepted");
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("Mario", "pass");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        Mockito.doReturn(users).when(userRepository).findByUsername("Mario");
 
         // EXECUTE
         MvcResult mvcResult = mockMvc.perform(

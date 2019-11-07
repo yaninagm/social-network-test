@@ -2,7 +2,6 @@ package com.schibsted.spain.friends.integration;
 
 import com.schibsted.spain.friends.config.Constants;
 import com.schibsted.spain.friends.legacy.FriendshipLegacyController;
-import com.schibsted.spain.friends.legacy.SignupLegacyController;
 import com.schibsted.spain.friends.model.FriendshipRequest;
 import com.schibsted.spain.friends.model.User;
 import com.schibsted.spain.friends.repository.FriendshipRequestRepository;
@@ -10,7 +9,6 @@ import com.schibsted.spain.friends.repository.UserRepository;
 import com.schibsted.spain.friends.service.FriendshipService;
 import com.schibsted.spain.friends.service.LoginService;
 import com.schibsted.spain.friends.service.ValidationsService;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -26,7 +24,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +32,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -94,18 +90,18 @@ public class FriendshipRequestControllerTest {
     @Test
     public void requestFriendshipOk() throws Exception{
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("Mario", "pass123456");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        Mockito.doReturn(users).when(userRepository).findByUsername("Mario");
         when(loginService.securePass("pass123456")).thenReturn("pass123456");
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> usersEstefania = new ArrayList<>();
         User userEstefania = new User("Estefania", "pass123456");
         usersEstefania.add(userEstefania);
-        Mockito.doReturn(users).when(userRepository).findByUserName("Estefania");
+        Mockito.doReturn(users).when(userRepository).findByUsername("Estefania");
 
 
         // MOCK findByUserFromAndUserToInPendingOrAccepted
@@ -130,17 +126,17 @@ public class FriendshipRequestControllerTest {
     @Test
     public void requestFriendshipPending() throws Exception{
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("Mario", "pass123456");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        Mockito.doReturn(users).when(userRepository).findByUsername("Mario");
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> usersEstefania = new ArrayList<>();
         User userEstefania = new User("Estefania", "pass123456");
         usersEstefania.add(userEstefania);
-        Mockito.doReturn(users).when(userRepository).findByUserName("Estefania");
+        Mockito.doReturn(users).when(userRepository).findByUsername("Estefania");
 
 
         // MOCK findByUserFromAndUserToInPendingOrAccepted

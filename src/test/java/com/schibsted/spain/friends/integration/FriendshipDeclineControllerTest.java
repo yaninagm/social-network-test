@@ -88,11 +88,11 @@ public class FriendshipDeclineControllerTest {
     @Test
     public void requestFriendshipOk() throws Exception{
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("Mario", "pass123456");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        Mockito.doReturn(users).when(userRepository).findByUsername("Mario");
         when(loginService.securePass("pass123456")).thenReturn("pass123456");
 
         Date date = new Date();
@@ -118,11 +118,11 @@ public class FriendshipDeclineControllerTest {
     @Test
     public void requestFriendshipPending() throws Exception{
 
-        // MOCK findByUserName
+        // MOCK findByUsername
         List<User> users = new ArrayList<>();
         User user = new User("Mario", "pass123456");
         users.add(user);
-        Mockito.doReturn(users).when(userRepository).findByUserName("Mario");
+        Mockito.doReturn(users).when(userRepository).findByUsername("Mario");
 
         Date date = new Date();
         // MOCK findByUserFromAndUserToInPendingOrAccepted

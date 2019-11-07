@@ -12,7 +12,7 @@ import java.util.List;
 public interface FriendshipRequestRepository extends JpaRepository<FriendshipRequest, Long> {
 
     @Query(value = "SELECT t FROM FriendshipRequest t where t.userFrom = :userFrom AND t.userTo = :userTo AND t.status = :status")
-    public List<FriendshipRequest> findByUserFromAndUserToAndStatus(@Param("userFrom") String userFrom, @Param("userTo") String userTo, @Param("status")  String status);
+    public List<FriendshipRequest> findByUserFromAndUserToAndStatus(@Param("userTo") String userTo, @Param("userFrom") String userFrom,  @Param("status")  String status);
 
     @Query(value = "SELECT t FROM FriendshipRequest t where t.status = :status AND (t.userFrom = :username OR t.userTo = :username)")
     public List<FriendshipRequest> findByUserFromOrUserToAndStatus(@Param("username") String username, @Param("status")  String status);
